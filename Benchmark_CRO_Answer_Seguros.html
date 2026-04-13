@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benchmark CRO - Answer Seguros vs Competidores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0264EB;
+            --primary-dark: #0150c2;
+            --primary-light: #e8f1fd;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --radius: 16px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+            --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0264EB 0%, #0a3d8f 100%);
+            color: white;
+            padding: 60px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .header-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+        .header h1 {
+            font-size: clamp(28px, 5vw, 44px);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+        .header p {
+            font-size: 18px;
+            opacity: 0.85;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+        .header-meta {
+            display: flex;
+            gap: 24px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+        .header-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Section */
+        .section {
+            padding: 60px 0;
+        }
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+        .section-subtitle {
+            color: var(--gray-500);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 700;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Competitor Cards */
+        .competitor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .competitor-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .competitor-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        .competitor-card.highlight {
+            border-color: var(--primary);
+            border-width: 2px;
+        }
+        .competitor-card.highlight::before {
+            content: 'ANALIZADO';
+            position: absolute;
+            top: 12px;
+            right: -28px;
+            background: var(--primary);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 32px;
+            transform: rotate(45deg);
+            letter-spacing: 1px;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .card-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            color: white;
+            flex-shrink: 0;
+        }
+        .card-logo.answer { background: #fff; border: 1px solid var(--gray-200); }
+        .card-logo.lacaja { background: #fff; border: 1px solid var(--gray-200); }
+        .card-logo.sancristobal { background: #fff; border: 1px solid var(--gray-200); }
+        .card-logo.iunigo { background: #fff; border: 1px solid var(--gray-200); }
+        .card-logo img { width: 36px; height: 36px; object-fit: contain; }
+        .card-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        .card-type {
+            font-size: 12px;
+            color: var(--gray-400);
+            font-weight: 500;
+        }
+
+        /* Stats */
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .stat-row:last-child { border-bottom: none; }
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+        .stat-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        /* Score bars */
+        .score-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .score-track {
+            flex: 1;
+            height: 8px;
+            background: var(--gray-100);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+        .score-fill {
+            height: 100%;
+            border-radius: 100px;
+            transition: width 0.8s ease;
+        }
+        .score-fill.high { background: var(--success); }
+        .score-fill.medium { background: var(--warning); }
+        .score-fill.low { background: var(--danger); }
+        .score-number {
+            font-size: 14px;
+            font-weight: 700;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* Comparison Table */
+        .comparison-table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .comparison-table {
+            width: 100%;
+            min-width: 800px;
+            border-collapse: collapse;
+            background: white;
+        }
+        .comparison-table thead th {
+            background: var(--gray-900);
+            color: white;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .comparison-table thead th:first-child {
+            border-radius: var(--radius) 0 0 0;
+        }
+        .comparison-table thead th:last-child {
+            border-radius: 0 var(--radius) 0 0;
+        }
+        .comparison-table thead th.col-answer { background: var(--primary-dark); }
+        .comparison-table tbody td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 14px;
+            vertical-align: top;
+        }
+        .comparison-table tbody tr:hover { background: var(--gray-50); }
+        .comparison-table tbody td:first-child {
+            font-weight: 600;
+            color: var(--gray-700);
+            white-space: nowrap;
+        }
+        .comparison-table tbody td.col-answer {
+            background: var(--primary-light);
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .tag-high { background: #dcfce7; color: #166534; }
+        .tag-medium { background: #fef3c7; color: #92400e; }
+        .tag-low { background: #fee2e2; color: #991b1b; }
+        .tag-info { background: var(--primary-light); color: var(--primary); }
+
+        /* Check/Cross icons */
+        .icon-check { color: var(--success); font-weight: 700; }
+        .icon-cross { color: var(--danger); font-weight: 700; }
+        .icon-partial { color: var(--warning); font-weight: 700; }
+
+        /* Friction Analysis */
+        .friction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .friction-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+        }
+        .friction-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .friction-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+        .friction-item span:first-child {
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        /* Action Items */
+        .action-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .action-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 20px;
+            align-items: start;
+            transition: all 0.3s ease;
+        }
+        .action-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateX(4px);
+        }
+        .action-card.critical { border-left-color: var(--danger); }
+        .action-card.important { border-left-color: var(--warning); }
+        .action-number {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+        }
+        .action-card.critical .action-number { background: var(--danger); }
+        .action-card.important .action-number { background: var(--warning); }
+        .action-body h4 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 6px;
+        }
+        .action-body p {
+            font-size: 14px;
+            color: var(--gray-500);
+            line-height: 1.6;
+        }
+        .action-tags {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        /* Roadmap */
+        .roadmap {
+            position: relative;
+            padding-left: 40px;
+        }
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gray-200);
+        }
+        .roadmap-item {
+            position: relative;
+            margin-bottom: 24px;
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            box-shadow: var(--shadow);
+        }
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 24px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid var(--primary-light);
+        }
+        .roadmap-item.active::before {
+            background: var(--success);
+            border-color: #dcfce7;
+            box-shadow: 0 0 0 4px rgba(16,185,129,0.15);
+        }
+        .roadmap-week {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .roadmap-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+        .roadmap-desc {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        /* Score Summary */
+        .score-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .score-box {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+        }
+        .score-box-value {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .score-box-value.green { color: var(--success); }
+        .score-box-value.yellow { color: var(--warning); }
+        .score-box-value.red { color: var(--danger); }
+        .score-box-value.blue { color: var(--primary); }
+        .score-box-label {
+            font-size: 13px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--gray-900);
+            color: var(--gray-400);
+            padding: 40px 0;
+            margin-top: 20px;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { padding: 40px 0 60px; }
+            .section { padding: 40px 0; }
+            .action-card { grid-template-columns: auto 1fr; }
+            .action-tags { flex-direction: row; align-items: center; grid-column: 1 / -1; }
+            .header-meta { gap: 12px; }
+            .competitor-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate { animation: fadeInUp 0.6s ease forwards; }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 0;
+        }
+
+        /* Reference banner */
+        .reference-banner {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .reference-banner p {
+            font-size: 14px;
+            color: #92400e;
+        }
+        .reference-banner strong {
+            color: #78350f;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <div class="header-content" style="position: relative;">
+        <button id="btn-actualizar" onclick="actualizarInforme()" style="
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        " onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+            <span id="refresh-icon" style="font-size: 16px;">&#8635;</span> Actualizar
+        </button>
+        <div class="header-badge">BENCHMARK CRO 2026</div>
+        <h1>Answer Seguros vs. Competidores</h1>
+        <p>Analisis comparativo del flujo de cotizacion de seguros de auto en Argentina. Oportunidades para aumentar cotizaciones y contrataciones diarias.</p>
+        <div class="header-meta">
+            <span>&#128197; Abril 2026</span>
+            <span>&#128663; Ford Fiesta 2014 Kinetic Design</span>
+            <span>&#128100; Hombre, 35 anios, CABA (1425)</span>
+            <span>&#127919; Lead Product Designer & CRO</span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Score Summary -->
+    <div style="margin-top: -40px; position: relative; z-index: 10;">
+        <div class="score-summary">
+            <div class="score-box">
+                <div class="score-box-value red">10-12</div>
+                <div class="score-box-label">Campos antes del precio<br>(Answer Seguros)</div>
+            </div>
+            <div class="score-box">
+                <div class="score-box-value yellow">6/10</div>
+                <div class="score-box-label">Score Mobile<br>(Answer Seguros)</div>
+            </div>
+            <div class="score-box">
+                <div class="score-box-value green">4-6</div>
+                <div class="score-box-label">Campos antes del precio<br>(iunigo - Lider)</div>
+            </div>
+            <div class="score-box">
+                <div class="score-box-value blue">+30-50%</div>
+                <div class="score-box-label">Aumento potencial<br>de cotizaciones</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 1: Competitor Overview -->
+    <div class="section">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <span class="section-number">1</span>
+            <h2 class="section-title">Mapa de Competidores</h2>
+        </div>
+        <p class="section-subtitle">Vision general de cada aseguradora y su flujo de cotizacion digital</p>
+
+        <div class="competitor-grid">
+            <!-- Answer -->
+            <div class="competitor-card highlight">
+                <div class="card-header">
+                    <div class="card-logo answer"><img src="https://answerseguros.com.ar/assets/img/logo_answer_galicia.svg" alt="Answer Seguros"></div>
+                    <div>
+                        <div class="card-name">Answer Seguros</div>
+                        <div class="card-type">Canal directo de SURA</div>
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Pasos cotizacion</span>
+                    <span class="stat-value">4-5 pasos</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Precarga patente</span>
+                    <span class="stat-value"><span class="icon-cross">&#10007;</span> No</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Datos antes del precio</span>
+                    <span class="stat-value"><span class="tag tag-low">10-12 campos</span></span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">WhatsApp/Chat</span>
+                    <span class="stat-value"><span class="icon-cross">&#10007;</span> No</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Score Mobile</span>
+                    <span class="stat-value">6/10</span>
+                </div>
+                <div style="margin-top: 16px;">
+                    <div class="score-bar">
+                        <span class="stat-label">UX General</span>
+                        <div class="score-track"><div class="score-fill medium" style="width: 55%"></div></div>
+                        <span class="score-number">5.5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- La Caja -->
+            <div class="competitor-card">
+                <div class="card-header">
+                    <div class="card-logo lacaja"><img src="https://images.seeklogo.com/logo-png/20/1/la-caja-logo-png_seeklogo-206320.png" alt="La Caja"></div>
+                    <div>
+                        <div class="card-name">La Caja</div>
+                        <div class="card-type">Aseguradora tradicional</div>
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Pasos cotizacion</span>
+                    <span class="stat-value">3-4 pasos</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Precarga patente</span>
+                    <span class="stat-value"><span class="icon-partial">&#9679;</span> Pide, no precarga</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Datos antes del precio</span>
+                    <span class="stat-value"><span class="tag tag-medium">8-10 campos</span></span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">WhatsApp/Chat</span>
+                    <span class="stat-value"><span class="icon-check">&#10003;</span> "Letizia"</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Score Mobile</span>
+                    <span class="stat-value">7/10</span>
+                </div>
+                <div style="margin-top: 16px;">
+                    <div class="score-bar">
+                        <span class="stat-label">UX General</span>
+                        <div class="score-track"><div class="score-fill medium" style="width: 65%"></div></div>
+                        <span class="score-number">6.5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- San Cristobal -->
+            <div class="competitor-card">
+                <div class="card-header">
+                    <div class="card-logo sancristobal"><img src="https://webinstitucional.blob.core.windows.net/master/2022/10/Logo-SCS.svg" alt="San Cristobal"></div>
+                    <div>
+                        <div class="card-name">San Cristobal</div>
+                        <div class="card-type">Aseguradora tradicional</div>
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Pasos cotizacion</span>
+                    <span class="stat-value">2-3 pasos + espera</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Precarga patente</span>
+                    <span class="stat-value"><span class="icon-cross">&#10007;</span> No</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Datos antes del precio</span>
+                    <span class="stat-value"><span class="tag tag-high">4-5 campos</span></span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">WhatsApp/Chat</span>
+                    <span class="stat-value"><span class="icon-check">&#10003;</span> "Santi"</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Score Mobile</span>
+                    <span class="stat-value">5/10</span>
+                </div>
+                <div style="margin-top: 16px;">
+                    <div class="score-bar">
+                        <span class="stat-label">UX General</span>
+                        <div class="score-track"><div class="score-fill medium" style="width: 50%"></div></div>
+                        <span class="score-number">5.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- iunigo -->
+            <div class="competitor-card">
+                <div class="card-header">
+                    <div class="card-logo iunigo"><img src="https://content.gruposancristobal.com/iunigo/logo-iunigo-sc-blue.png" alt="iunigo"></div>
+                    <div>
+                        <div class="card-name">iunigo</div>
+                        <div class="card-type">Digital-first (San Cristobal)</div>
+                    </div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Pasos cotizacion</span>
+                    <span class="stat-value">4 pasos claros</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Precarga patente</span>
+                    <span class="stat-value"><span class="icon-partial">&#9679;</span> Seleccion simplificada</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Datos antes del precio</span>
+                    <span class="stat-value"><span class="tag tag-high">4-6 campos</span></span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">WhatsApp/Chat</span>
+                    <span class="stat-value"><span class="icon-check">&#10003;</span> Chatbot</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Score Mobile</span>
+                    <span class="stat-value">9/10</span>
+                </div>
+                <div style="margin-top: 16px;">
+                    <div class="score-bar">
+                        <span class="stat-label">UX General</span>
+                        <div class="score-track"><div class="score-fill high" style="width: 85%"></div></div>
+                        <span class="score-number">8.5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 2: Comparison Table -->
+    <div class="section">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <span class="section-number">2</span>
+            <h2 class="section-title">Tabla Comparativa Detallada</h2>
+        </div>
+        <p class="section-subtitle">Comparacion lado a lado de todos los criterios del flujo de cotizacion</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Criterio</th>
+                        <th class="col-answer">Answer Seguros</th>
+                        <th>La Caja</th>
+                        <th>San Cristobal</th>
+                        <th>iunigo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Pasos hasta precio</td>
+                        <td class="col-answer">4-5 pasos</td>
+                        <td>3-4 pasos</td>
+                        <td>2-3 + espera asesor</td>
+                        <td>4 pasos (3 min)</td>
+                    </tr>
+                    <tr>
+                        <td>Entrada de datos</td>
+                        <td class="col-answer">Manual total (marca, modelo, anio, version)</td>
+                        <td>Manual + patente (sin precarga)</td>
+                        <td>Manual basico</td>
+                        <td>Seleccion simplificada</td>
+                    </tr>
+                    <tr>
+                        <td>Datos personales</td>
+                        <td class="col-answer"><span class="tag tag-low">ANTES del precio</span></td>
+                        <td><span class="tag tag-low">ANTES del precio</span></td>
+                        <td><span class="tag tag-medium">Basicos, luego asesor</span></td>
+                        <td><span class="tag tag-high">DESPUES (solo al contratar)</span></td>
+                    </tr>
+                    <tr>
+                        <td>Campos obligatorios</td>
+                        <td class="col-answer"><strong>10-12</strong></td>
+                        <td><strong>8-10</strong> + reCAPTCHA</td>
+                        <td><strong>4-5</strong></td>
+                        <td><strong>4-6</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Velocidad percibida</td>
+                        <td class="col-answer"><span class="tag tag-low">Baja</span> (SPA pesado)</td>
+                        <td><span class="tag tag-medium">Media</span></td>
+                        <td><span class="tag tag-low">Baja</span> (espera humana)</td>
+                        <td><span class="tag tag-high">Alta</span> (3 minutos)</td>
+                    </tr>
+                    <tr>
+                        <td>WhatsApp visible</td>
+                        <td class="col-answer"><span class="icon-cross">&#10007;</span> No</td>
+                        <td><span class="icon-check">&#10003;</span> "Letizia"</td>
+                        <td><span class="icon-check">&#10003;</span> "Santi"</td>
+                        <td><span class="icon-check">&#10003;</span> Chatbot</td>
+                    </tr>
+                    <tr>
+                        <td>Coberturas</td>
+                        <td class="col-answer">TC, TC Premium, C Clima, TR Franquicia</td>
+                        <td>RC, TC, TR, Todo Total</td>
+                        <td>Plus Mas, Mega, Extra (7 opciones)</td>
+                        <td>Planes simplificados</td>
+                    </tr>
+                    <tr>
+                        <td>Claridad coberturas</td>
+                        <td class="col-answer"><span class="tag tag-medium">Media</span> ("C Clima" confuso)</td>
+                        <td><span class="tag tag-high">Buena</span> (nombres estandar)</td>
+                        <td><span class="tag tag-low">Baja</span> (nombres propios)</td>
+                        <td><span class="tag tag-high">Alta</span> (descripciones claras)</td>
+                    </tr>
+                    <tr>
+                        <td>Transparencia precio</td>
+                        <td class="col-answer"><span class="tag tag-medium">Media</span></td>
+                        <td><span class="tag tag-medium">Media-Baja</span> (letra chica)</td>
+                        <td><span class="tag tag-low">Baja</span> (sin precio online)</td>
+                        <td><span class="tag tag-high">Alta</span></td>
+                    </tr>
+                    <tr>
+                        <td>CTA principal</td>
+                        <td class="col-answer">"Cotiza" / "Proteger mi auto" (oscuro)</td>
+                        <td>"COTIZAR" (rojo, mayusculas)</td>
+                        <td>"Cotiza online" (azul)</td>
+                        <td>"Cotiza tu Auto ahora!" (urgencia)</td>
+                    </tr>
+                    <tr>
+                        <td>Score Mobile</td>
+                        <td class="col-answer"><strong>6/10</strong></td>
+                        <td><strong>7/10</strong></td>
+                        <td><strong>5/10</strong></td>
+                        <td><strong>9/10</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Cotizacion 100% online</td>
+                        <td class="col-answer"><span class="icon-check">&#10003;</span> Si</td>
+                        <td><span class="icon-check">&#10003;</span> Si</td>
+                        <td><span class="icon-cross">&#10007;</span> Requiere asesor</td>
+                        <td><span class="icon-check">&#10003;</span> Si</td>
+                    </tr>
+                    <tr>
+                        <td>App movil</td>
+                        <td class="col-answer"><span class="icon-partial">&#9679;</span> Solo autogestion</td>
+                        <td><span class="icon-check">&#10003;</span> Completa</td>
+                        <td><span class="icon-check">&#10003;</span> Completa</td>
+                        <td><span class="icon-check">&#10003;</span> iOS + Android</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 3: Friction Analysis -->
+    <div class="section">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <span class="section-number">3</span>
+            <h2 class="section-title">Analisis de Friccion</h2>
+        </div>
+        <p class="section-subtitle">Donde pierde usuarios Answer Seguros en el funnel de cotizacion</p>
+
+        <div class="friction-grid">
+            <div class="friction-card">
+                <h4><span style="font-size: 20px;">&#128683;</span> Barreras de entrada</h4>
+                <div class="friction-item">
+                    <span>&#128308;</span>
+                    <span>10-12 campos antes de ver precio (vs 4-6 de iunigo)</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128308;</span>
+                    <span>DNI, email, telefono pedidos antes de mostrar cotizacion</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128992;</span>
+                    <span>Sin precarga de datos por patente (todo manual)</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128992;</span>
+                    <span>Seleccion de version del vehiculo obliga a conocer dato tecnico</span>
+                </div>
+            </div>
+
+            <div class="friction-card">
+                <h4><span style="font-size: 20px;">&#128260;</span> Puntos de abandono</h4>
+                <div class="friction-item">
+                    <span>&#128308;</span>
+                    <span>Sin WhatsApp ni chatbot para rescatar usuarios con dudas</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128308;</span>
+                    <span>Nombre "C Clima" no se entiende sin contexto</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128992;</span>
+                    <span>Sin comparador visual lado a lado entre coberturas</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128992;</span>
+                    <span>CTA con color oscuro (baja urgencia visual)</span>
+                </div>
+            </div>
+
+            <div class="friction-card">
+                <h4><span style="font-size: 20px;">&#9889;</span> Performance</h4>
+                <div class="friction-item">
+                    <span>&#128308;</span>
+                    <span>SPA Angular con carga pesada de scripts de tracking</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128992;</span>
+                    <span>GTM + FB Pixel + Smile + bgsensors = latencia en mobile</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128994;</span>
+                    <span>Angular Material provee buenos componentes responsive</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128994;</span>
+                    <span>Breakpoints bien configurados (576-1200px)</span>
+                </div>
+            </div>
+
+            <div class="friction-card">
+                <h4><span style="font-size: 20px;">&#128170;</span> Fortalezas de Answer</h4>
+                <div class="friction-item">
+                    <span>&#128994;</span>
+                    <span>Flujo 100% online end-to-end (mejor que San Cristobal)</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128994;</span>
+                    <span>Respaldo SURA (70+ anios, presencia regional)</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128994;</span>
+                    <span>Cobertura C Clima es producto unico diferenciador</span>
+                </div>
+                <div class="friction-item">
+                    <span>&#128994;</span>
+                    <span>Horario amplio: L-V 9 a 21hs</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 4: Action Items -->
+    <div class="section">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <span class="section-number">4</span>
+            <h2 class="section-title">5 Accionables Prioritarios para Answer</h2>
+        </div>
+        <p class="section-subtitle">Clasificados por impacto en conversion y facilidad de implementacion</p>
+
+        <div class="action-grid">
+            <!-- Action 1 -->
+            <div class="action-card critical">
+                <div class="action-number">1</div>
+                <div class="action-body">
+                    <h4>Implementar precarga por patente</h4>
+                    <p>Integrar API del DNRPA o servicio de datos vehiculares. Al ingresar la patente se autocompletarian marca, modelo, anio y version. Reduce de 5 campos manuales a 1 solo campo. Referencia: ClickSeguros usa Select2 con busqueda filtrada para simplificar seleccion.</p>
+                </div>
+                <div class="action-tags">
+                    <span class="tag tag-low">IMPACTO ALTO</span>
+                    <span class="tag tag-medium">FACILIDAD MEDIA</span>
+                </div>
+            </div>
+
+            <!-- Action 2 -->
+            <div class="action-card critical">
+                <div class="action-number">2</div>
+                <div class="action-body">
+                    <h4>Mostrar precio ANTES de pedir datos personales</h4>
+                    <p>Reestructurar flujo: Paso 1 = datos del auto + CP, Paso 2 = ver coberturas y precios, Paso 3 = datos personales solo al contratar. Elimina la mayor barrera psicologica. iunigo ya lo hace asi y lidera el mercado digital.</p>
+                </div>
+                <div class="action-tags">
+                    <span class="tag tag-low">IMPACTO ALTO</span>
+                    <span class="tag tag-high">FACILIDAD ALTA</span>
+                </div>
+            </div>
+
+            <!-- Action 3 -->
+            <div class="action-card critical">
+                <div class="action-number">3</div>
+                <div class="action-body">
+                    <h4>Agregar WhatsApp flotante + chatbot en el cotizador</h4>
+                    <p>Boton de WhatsApp visible permanentemente durante todo el flujo (como La Caja con "Letizia" y ClickSeguros con su widget flotante). Respuestas automatizadas para dudas sobre coberturas. Esto rescata usuarios que abandonan por dudas no resueltas.</p>
+                </div>
+                <div class="action-tags">
+                    <span class="tag tag-low">IMPACTO ALTO</span>
+                    <span class="tag tag-high">QUICK WIN</span>
+                </div>
+            </div>
+
+            <!-- Action 4 -->
+            <div class="action-card important">
+                <div class="action-number">4</div>
+                <div class="action-body">
+                    <h4>Redisenar tarjetas de cobertura con nombres claros</h4>
+                    <p>Reemplazar "C Clima" por "Todo Riesgo + Clima", "TC Premium" por "Terceros Premium". Agregar tabla comparativa lado a lado con checkmarks (como ClickSeguros muestra sus tarjetas). Tooltips explicativos en cada item.</p>
+                </div>
+                <div class="action-tags">
+                    <span class="tag tag-medium">IMPACTO MEDIO-ALTO</span>
+                    <span class="tag tag-high">FACILIDAD ALTA</span>
+                </div>
+            </div>
+
+            <!-- Action 5 -->
+            <div class="action-card important">
+                <div class="action-number">5</div>
+                <div class="action-body">
+                    <h4>Optimizar performance mobile y CTA</h4>
+                    <p>Diferir carga de GTM, lazy-load FB Pixel. Cambiar color del CTA principal a rojo/naranja de alta conversion (referencia: La Caja usa #c21b17). Texto orientado a beneficio: "Ver mi precio en 2 minutos". Agregar barra de progreso en mobile.</p>
+                </div>
+                <div class="action-tags">
+                    <span class="tag tag-medium">IMPACTO MEDIO</span>
+                    <span class="tag tag-high">FACILIDAD ALTA</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 5: Impact -->
+    <div class="section">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <span class="section-number">5</span>
+            <h2 class="section-title">Impacto Estimado</h2>
+        </div>
+        <p class="section-subtitle">Proyeccion de mejora al implementar los 5 accionables</p>
+
+        <div class="score-summary">
+            <div class="score-box">
+                <div class="score-box-value green">-25 a 40%</div>
+                <div class="score-box-label">Reduccion de abandono<br>en cotizador</div>
+            </div>
+            <div class="score-box">
+                <div class="score-box-value blue">+30 a 50%</div>
+                <div class="score-box-label">Aumento de cotizaciones<br>completadas</div>
+            </div>
+            <div class="score-box">
+                <div class="score-box-value green">+15 a 25%</div>
+                <div class="score-box-label">Mejora en tasa<br>de contratacion</div>
+            </div>
+            <div class="score-box">
+                <div class="score-box-value yellow">7-8 sem.</div>
+                <div class="score-box-label">Tiempo total<br>de implementacion</div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Section 6: Roadmap -->
+    <div class="section">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <span class="section-number">6</span>
+            <h2 class="section-title">Roadmap de Implementacion</h2>
+        </div>
+        <p class="section-subtitle">Secuencia sugerida priorizando quick wins</p>
+
+        <div class="roadmap">
+            <div class="roadmap-item active">
+                <div class="roadmap-week">Semana 1-2 | QUICK WIN</div>
+                <div class="roadmap-title">WhatsApp flotante + chatbot basico</div>
+                <div class="roadmap-desc">Integrar WhatsApp Business API. Widget flotante visible en todo el flujo. Respuestas automatizadas para las 10 preguntas mas frecuentes sobre coberturas.</div>
+            </div>
+            <div class="roadmap-item active">
+                <div class="roadmap-week">Semana 2-3 | QUICK WIN</div>
+                <div class="roadmap-title">Rediseno de CTAs + optimizacion de scripts</div>
+                <div class="roadmap-desc">Cambiar color CTA a rojo/naranja. Texto "Ver mi precio en 2 min". Diferir GTM/FB Pixel. Agregar barra de progreso mobile. Medicion A/B.</div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-week">Semana 3-5 | ALTO IMPACTO</div>
+                <div class="roadmap-title">Reestructurar flujo: precio antes de datos personales</div>
+                <div class="roadmap-desc">Nuevo flujo: Auto + CP > Ver planes y precios > Datos personales solo al contratar. Requiere refactor del stepper Angular. Test A/B vs flujo actual.</div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-week">Semana 4-6 | ALTO IMPACTO</div>
+                <div class="roadmap-title">Integracion API patente para precarga de datos</div>
+                <div class="roadmap-desc">Conectar con API DNRPA o servicio de datos vehiculares. Input unico de patente que autocompleta marca/modelo/anio/version. Fallback a seleccion manual.</div>
+            </div>
+            <div class="roadmap-item">
+                <div class="roadmap-week">Semana 5-7 | MEJORA UX</div>
+                <div class="roadmap-title">Rediseno tarjetas de cobertura + comparador visual</div>
+                <div class="roadmap-desc">Nuevos nombres: "Todo Riesgo + Clima", "Terceros Premium". Tabla comparativa con checkmarks. Tooltips en cada item. Destacar plan recomendado.</div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Benchmark Reference -->
+    <div class="section" style="padding-bottom: 40px;">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <span class="section-number">7</span>
+            <h2 class="section-title">Referencia: ClickSeguros como Modelo UX</h2>
+        </div>
+        <p class="section-subtitle">Elementos del comparador de ClickSeguros que Answer deberia adoptar</p>
+
+        <div class="friction-grid">
+            <div class="friction-card">
+                <h4><span style="font-size: 18px;">&#127912;</span> Diseno visual</h4>
+                <div class="friction-item"><span>&#10003;</span><span>Hero limpio con cotizador prominente</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Select2 con filtrado interactivo en dropdowns</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Bordes redondeados consistentes (100px en botones)</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Color primario azul (#0264EB) transmite confianza</span></div>
+            </div>
+            <div class="friction-card">
+                <h4><span style="font-size: 18px;">&#9889;</span> UX del cotizador</h4>
+                <div class="friction-item"><span>&#10003;</span><span>Campos que se habilitan progresivamente</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Loading states con backdrop blur</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Livewire para actualizacion sin recarga</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Validacion en tiempo real</span></div>
+            </div>
+            <div class="friction-card">
+                <h4><span style="font-size: 18px;">&#129309;</span> Confianza</h4>
+                <div class="friction-item"><span>&#10003;</span><span>25 logos de aseguradoras visibles</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Testimonios Google Reviews (4.7 estrellas)</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Inscripcion SSN visible en footer</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>WhatsApp flotante siempre accesible</span></div>
+            </div>
+            <div class="friction-card">
+                <h4><span style="font-size: 18px;">&#128241;</span> Mobile</h4>
+                <div class="friction-item"><span>&#10003;</span><span>Inputs full-width en mobile</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Navegacion adaptativa (hamburger)</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Toast notifications no intrusivas</span></div>
+                <div class="friction-item"><span>&#10003;</span><span>Schema.org para SEO</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <div class="footer-content">
+        <p><strong>Benchmark CRO - Answer Seguros vs Competidores Argentina</strong></p>
+        <p style="margin-top: 8px;">Abril 2026 | Lead Product Designer & CRO Specialist</p>
+        <p style="margin-top: 8px;">Fuentes: answerseguros.com.ar | cotizador.lacaja.com.ar | sancristobal.com.ar | iunigo.com.ar | clickseguros.com.ar | comparaencasa.com</p>
+    </div>
+</div>
+
+<!-- Panel de resultados en vivo -->
+<div id="live-panel" style="display:none; max-width:1200px; margin:0 auto; padding:0 24px;">
+    <hr class="divider">
+    <div class="section">
+        <div style="display:flex; align-items:center; margin-bottom:8px;">
+            <span class="section-number" style="background:#10b981;">&#9889;</span>
+            <h2 class="section-title">Datos en Vivo — Ultima Actualizacion</h2>
+        </div>
+        <p class="section-subtitle" id="live-fecha">Cargando...</p>
+        <div class="score-summary" id="live-scores"></div>
+        <div id="live-detalles" style="display:flex; flex-direction:column; gap:12px;"></div>
+    </div>
+</div>
+
+<script>
+var SITIOS = [
+    { nombre: 'Answer Seguros', url: 'https://www.answerseguros.com.ar', clase: 'answer' },
+    { nombre: 'La Caja', url: 'https://seguros.lacaja.com.ar', clase: 'lacaja' },
+    { nombre: 'San Cristobal', url: 'https://www.sancristobal.com.ar', clase: 'sancristobal' },
+    { nombre: 'iunigo', url: 'https://www.iunigo.com.ar', clase: 'iunigo' }
+];
+
+function fetchPageSpeed(siteUrl) {
+    var apiUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url='
+        + encodeURIComponent(siteUrl)
+        + '&strategy=mobile&category=performance&category=accessibility&category=best-practices&category=seo';
+    return fetch(apiUrl).then(function(r) { return r.json(); });
+}
+
+function scoreColor(score) {
+    if (score >= 90) return 'green';
+    if (score >= 50) return 'yellow';
+    return 'red';
+}
+
+function scoreTag(score) {
+    if (score >= 90) return 'tag-high';
+    if (score >= 50) return 'tag-medium';
+    return 'tag-low';
+}
+
+function actualizarInforme() {
+    var btn = document.getElementById('btn-actualizar');
+    btn.innerHTML = '<span style="font-size:16px; animation: spin 1s linear infinite; display:inline-block;">&#8635;</span> Actualizando...';
+    btn.style.pointerEvents = 'none';
+    btn.style.opacity = '0.7';
+
+    var panel = document.getElementById('live-panel');
+    panel.style.display = 'block';
+    document.getElementById('live-scores').innerHTML = '<div class="score-box"><div class="score-box-value blue">...</div><div class="score-box-label">Consultando Google PageSpeed Insights para 4 sitios...</div></div>';
+    document.getElementById('live-detalles').innerHTML = '';
+
+    var promesas = SITIOS.map(function(sitio) {
+        return fetchPageSpeed(sitio.url).then(function(data) {
+            var cats = data.lighthouseResult.categories;
+            return {
+                nombre: sitio.nombre,
+                clase: sitio.clase,
+                url: sitio.url,
+                performance: Math.round(cats.performance.score * 100),
+                accessibility: Math.round(cats.accessibility.score * 100),
+                bestPractices: Math.round(cats['best-practices'].score * 100),
+                seo: Math.round(cats.seo.score * 100),
+                fcp: data.lighthouseResult.audits['first-contentful-paint'].displayValue,
+                lcp: data.lighthouseResult.audits['largest-contentful-paint'].displayValue,
+                cls: data.lighthouseResult.audits['cumulative-layout-shift'].displayValue,
+                tbt: data.lighthouseResult.audits['total-blocking-time'].displayValue,
+                si: data.lighthouseResult.audits['speed-index'].displayValue
+            };
+        }).catch(function() {
+            return { nombre: sitio.nombre, clase: sitio.clase, url: sitio.url, error: true };
+        });
+    });
+
+    Promise.all(promesas).then(function(resultados) {
+        var hoy = new Date();
+        var opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+        var fechaStr = hoy.toLocaleDateString('es-AR', opciones);
+        var horaStr = hoy.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+
+        // Guardar en localStorage
+        localStorage.setItem('benchmark_ultima_actualizacion', hoy.toISOString());
+        localStorage.setItem('benchmark_datos_live', JSON.stringify(resultados));
+
+        // Actualizar badge
+        document.querySelector('.header-badge').textContent = 'BENCHMARK CRO 2026 — Actualizado: ' + fechaStr + ' ' + horaStr;
+
+        renderResultados(resultados, fechaStr + ' ' + horaStr);
+
+        // Actualizar scores de mobile en las tarjetas del mapa de competidores
+        actualizarTarjetas(resultados);
+
+        // Restaurar boton
+        btn.innerHTML = '<span style="font-size:16px;">&#10003;</span> Actualizado';
+        btn.style.background = 'rgba(16,185,129,0.3)';
+        btn.style.borderColor = 'rgba(16,185,129,0.5)';
+        btn.style.pointerEvents = 'auto';
+        btn.style.opacity = '1';
+
+        setTimeout(function() {
+            btn.innerHTML = '<span id="refresh-icon" style="font-size:16px;">&#8635;</span> Actualizar';
+            btn.style.background = 'rgba(255,255,255,0.15)';
+            btn.style.borderColor = 'rgba(255,255,255,0.3)';
+        }, 3000);
+    });
+}
+
+function renderResultados(resultados, fechaHora) {
+    document.getElementById('live-fecha').textContent = 'Datos reales de Google PageSpeed Insights (Mobile) — ' + fechaHora;
+
+    // Score boxes
+    var scoresHtml = '';
+    resultados.forEach(function(r) {
+        if (r.error) {
+            scoresHtml += '<div class="score-box"><div class="score-box-value red">ERR</div><div class="score-box-label">' + r.nombre + '<br>No disponible</div></div>';
+        } else {
+            scoresHtml += '<div class="score-box"><div class="score-box-value ' + scoreColor(r.performance) + '">' + r.performance + '</div><div class="score-box-label">' + r.nombre + '<br>Performance Mobile</div></div>';
+        }
+    });
+    document.getElementById('live-scores').innerHTML = scoresHtml;
+
+    // Tabla detallada
+    var tabla = '<div class="comparison-table-wrapper"><table class="comparison-table"><thead><tr>'
+        + '<th>Metrica</th>';
+    resultados.forEach(function(r) {
+        var thClass = r.clase === 'answer' ? ' class="col-answer"' : '';
+        tabla += '<th' + thClass + '>' + r.nombre + '</th>';
+    });
+    tabla += '</tr></thead><tbody>';
+
+    var metricas = [
+        { key: 'performance', label: 'Performance' },
+        { key: 'accessibility', label: 'Accesibilidad' },
+        { key: 'bestPractices', label: 'Buenas Practicas' },
+        { key: 'seo', label: 'SEO' },
+        { key: 'fcp', label: 'First Contentful Paint' },
+        { key: 'lcp', label: 'Largest Contentful Paint' },
+        { key: 'cls', label: 'Cumulative Layout Shift' },
+        { key: 'tbt', label: 'Total Blocking Time' },
+        { key: 'si', label: 'Speed Index' }
+    ];
+
+    metricas.forEach(function(m) {
+        tabla += '<tr><td>' + m.label + '</td>';
+        resultados.forEach(function(r) {
+            var tdClass = r.clase === 'answer' ? ' class="col-answer"' : '';
+            if (r.error) {
+                tabla += '<td' + tdClass + '>-</td>';
+            } else {
+                var val = r[m.key];
+                if (typeof val === 'number') {
+                    tabla += '<td' + tdClass + '><span class="tag ' + scoreTag(val) + '">' + val + '/100</span></td>';
+                } else {
+                    tabla += '<td' + tdClass + '>' + val + '</td>';
+                }
+            }
+        });
+        tabla += '</tr>';
+    });
+
+    tabla += '</tbody></table></div>';
+    document.getElementById('live-detalles').innerHTML = tabla;
+}
+
+function actualizarTarjetas(resultados) {
+    // Buscar las tarjetas de competidores y actualizar el Score Mobile con datos reales
+    var tarjetas = document.querySelectorAll('.competitor-card');
+    tarjetas.forEach(function(tarjeta) {
+        var nombre = tarjeta.querySelector('.card-name');
+        if (!nombre) return;
+        var resultado = resultados.find(function(r) {
+            return nombre.textContent.trim().toLowerCase().indexOf(r.nombre.toLowerCase().split(' ')[0]) > -1
+                || r.nombre.toLowerCase().indexOf(nombre.textContent.trim().toLowerCase().split(' ')[0]) > -1;
+        });
+        if (resultado && !resultado.error) {
+            // Actualizar la barra de UX General con el performance score real
+            var scoreBar = tarjeta.querySelector('.score-fill');
+            var scoreNum = tarjeta.querySelector('.score-number');
+            if (scoreBar && scoreNum) {
+                var perf = resultado.performance;
+                scoreBar.style.width = perf + '%';
+                scoreBar.className = 'score-fill ' + (perf >= 70 ? 'high' : perf >= 40 ? 'medium' : 'low');
+                scoreNum.textContent = (perf / 10).toFixed(1);
+            }
+        }
+    });
+}
+
+// Al cargar, restaurar datos guardados
+window.addEventListener('DOMContentLoaded', function() {
+    var ultima = localStorage.getItem('benchmark_ultima_actualizacion');
+    var datos = localStorage.getItem('benchmark_datos_live');
+    if (ultima) {
+        var fecha = new Date(ultima);
+        var opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+        var fechaStr = fecha.toLocaleDateString('es-AR', opciones);
+        var horaStr = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        document.querySelector('.header-badge').textContent = 'BENCHMARK CRO 2026 — Actualizado: ' + fechaStr + ' ' + horaStr;
+
+        if (datos) {
+            var resultados = JSON.parse(datos);
+            document.getElementById('live-panel').style.display = 'block';
+            renderResultados(resultados, fechaStr + ' ' + horaStr);
+            actualizarTarjetas(resultados);
+        }
+    }
+});
+</script>
+<style>
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+</script>
+
+</body>
+</html>
