@@ -1230,7 +1230,30 @@ function fetchPageSpeed(siteUrl) {
     var apiUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url='
         + encodeURIComponent(siteUrl)
         + '&strategy=mobile&category=performance&category=accessibility&category=best-practices&category=seo';
-    return fetch(apiUrl).then(function(r) { return r.json(); });
+    return fetch(apiUrl, { signal: AbortSignal.timeout(120000) })
+        .then(function(r) { return r.json(); });
+}
+
+function parsePSIResult(sitio, data) {
+    if (data.error || !data.lighthouseResult) {
+        return { nombre: sitio.nombre, clase: sitio.clase, url: sitio.url, error: true, errorMsg: data.error ? data.error.message : 'Sin datos' };
+    }
+    var cats = data.lighthouseResult.categories;
+    var audits = data.lighthouseResult.audits;
+    return {
+        nombre: sitio.nombre,
+        clase: sitio.clase,
+        url: sitio.url,
+        performance: Math.round((cats.performance ? cats.performance.score : 0) * 100),
+        accessibility: Math.round((cats.accessibility ? cats.accessibility.score : 0) * 100),
+        bestPractices: Math.round((cats['best-practices'] ? cats['best-practices'].score : 0) * 100),
+        seo: Math.round((cats.seo ? cats.seo.score : 0) * 100),
+        fcp: audits['first-contentful-paint'] ? audits['first-contentful-paint'].displayValue : '-',
+        lcp: audits['largest-contentful-paint'] ? audits['largest-contentful-paint'].displayValue : '-',
+        cls: audits['cumulative-layout-shift'] ? audits['cumulative-layout-shift'].displayValue : '-',
+        tbt: audits['total-blocking-time'] ? audits['total-blocking-time'].displayValue : '-',
+        si: audits['speed-index'] ? audits['speed-index'].displayValue : '-'
+    };
 }
 
 function scoreColor(score) {
@@ -1245,89 +1268,103 @@ function scoreTag(score) {
     return 'tag-low';
 }
 
-function actualizarInforme() {
+function actualizarProgreso(indice, total, nombreSitio) {
+    var pct = Math.round(((indice) / total) * 100);
+    var scoresEl = document.getElementById('live-scores');
+    scoresEl.innerHTML = '<div class="score-box" style="grid-column: 1/-1;">'
+        + '<div class="score-box-value blue" style="font-size:24px;">' + indice + ' / ' + total + '</div>'
+        + '<div class="score-box-label">Analizando: <strong>' + nombreSitio + '</strong><br>'
+        + '<div style="background:#e5e7eb; border-radius:100px; height:8px; margin-top:10px; overflow:hidden;">'
+        + '<div style="background:#0264EB; height:100%; width:' + pct + '%; border-radius:100px; transition: width 0.5s ease;"></div>'
+        + '</div>'
+        + '<span style="font-size:12px; color:#9ca3af; margin-top:6px; display:block;">Cada sitio tarda ~30-60 seg. No cierres la pagina.</span>'
+        + '</div></div>';
+}
+
+async function actualizarInforme() {
     var btn = document.getElementById('btn-actualizar');
-    btn.innerHTML = '<span style="font-size:16px; animation: spin 1s linear infinite; display:inline-block;">&#8635;</span> Actualizando...';
+    btn.innerHTML = '<span style="font-size:16px; animation: spin 1s linear infinite; display:inline-block;">&#8635;</span> Analizando...';
     btn.style.pointerEvents = 'none';
     btn.style.opacity = '0.7';
 
     var panel = document.getElementById('live-panel');
     panel.style.display = 'block';
-    document.getElementById('live-scores').innerHTML = '<div class="score-box"><div class="score-box-value blue">...</div><div class="score-box-label">Consultando Google PageSpeed Insights para 4 sitios...</div></div>';
+    panel.scrollIntoView({ behavior: 'smooth' });
     document.getElementById('live-detalles').innerHTML = '';
 
-    var promesas = SITIOS.map(function(sitio) {
-        return fetchPageSpeed(sitio.url).then(function(data) {
-            var cats = data.lighthouseResult.categories;
-            return {
-                nombre: sitio.nombre,
-                clase: sitio.clase,
-                url: sitio.url,
-                performance: Math.round(cats.performance.score * 100),
-                accessibility: Math.round(cats.accessibility.score * 100),
-                bestPractices: Math.round(cats['best-practices'].score * 100),
-                seo: Math.round(cats.seo.score * 100),
-                fcp: data.lighthouseResult.audits['first-contentful-paint'].displayValue,
-                lcp: data.lighthouseResult.audits['largest-contentful-paint'].displayValue,
-                cls: data.lighthouseResult.audits['cumulative-layout-shift'].displayValue,
-                tbt: data.lighthouseResult.audits['total-blocking-time'].displayValue,
-                si: data.lighthouseResult.audits['speed-index'].displayValue
-            };
-        }).catch(function() {
-            return { nombre: sitio.nombre, clase: sitio.clase, url: sitio.url, error: true };
-        });
-    });
+    var resultados = [];
 
-    Promise.all(promesas).then(function(resultados) {
-        var hoy = new Date();
-        var opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-        var fechaStr = hoy.toLocaleDateString('es-AR', opciones);
-        var horaStr = hoy.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    // Consultas secuenciales (una por una) para evitar rate limiting
+    for (var i = 0; i < SITIOS.length; i++) {
+        var sitio = SITIOS[i];
+        actualizarProgreso(i + 1, SITIOS.length, sitio.nombre);
 
-        // Guardar en localStorage
-        localStorage.setItem('benchmark_ultima_actualizacion', hoy.toISOString());
-        localStorage.setItem('benchmark_datos_live', JSON.stringify(resultados));
+        try {
+            var data = await fetchPageSpeed(sitio.url);
+            resultados.push(parsePSIResult(sitio, data));
+        } catch (e) {
+            resultados.push({ nombre: sitio.nombre, clase: sitio.clase, url: sitio.url, error: true, errorMsg: e.message });
+        }
 
-        // Actualizar badge
-        document.querySelector('.header-badge').textContent = 'BENCHMARK CRO 2026 — Actualizado: ' + fechaStr + ' ' + horaStr;
+        // Esperar 2 segundos entre consultas para no saturar la API
+        if (i < SITIOS.length - 1) {
+            await new Promise(function(r) { setTimeout(r, 2000); });
+        }
+    }
 
-        renderResultados(resultados, fechaStr + ' ' + horaStr);
+    var hoy = new Date();
+    var opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+    var fechaStr = hoy.toLocaleDateString('es-AR', opciones);
+    var horaStr = hoy.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
 
-        // Actualizar scores de mobile en las tarjetas del mapa de competidores
-        actualizarTarjetas(resultados);
+    // Guardar en localStorage
+    localStorage.setItem('benchmark_ultima_actualizacion', hoy.toISOString());
+    localStorage.setItem('benchmark_datos_live', JSON.stringify(resultados));
 
-        // Restaurar boton
-        btn.innerHTML = '<span style="font-size:16px;">&#10003;</span> Actualizado';
-        btn.style.background = 'rgba(16,185,129,0.3)';
-        btn.style.borderColor = 'rgba(16,185,129,0.5)';
-        btn.style.pointerEvents = 'auto';
-        btn.style.opacity = '1';
+    // Actualizar badge
+    document.querySelector('.header-badge').textContent = 'BENCHMARK CRO 2026 — Actualizado: ' + fechaStr + ' ' + horaStr;
 
-        setTimeout(function() {
-            btn.innerHTML = '<span id="refresh-icon" style="font-size:16px;">&#8635;</span> Actualizar';
-            btn.style.background = 'rgba(255,255,255,0.15)';
-            btn.style.borderColor = 'rgba(255,255,255,0.3)';
-        }, 3000);
-    });
+    renderResultados(resultados, fechaStr + ' ' + horaStr);
+    actualizarTarjetas(resultados);
+
+    // Restaurar boton
+    btn.innerHTML = '<span style="font-size:16px;">&#10003;</span> Actualizado';
+    btn.style.background = 'rgba(16,185,129,0.3)';
+    btn.style.borderColor = 'rgba(16,185,129,0.5)';
+    btn.style.pointerEvents = 'auto';
+    btn.style.opacity = '1';
+
+    setTimeout(function() {
+        btn.innerHTML = '<span id="refresh-icon" style="font-size:16px;">&#8635;</span> Actualizar';
+        btn.style.background = 'rgba(255,255,255,0.15)';
+        btn.style.borderColor = 'rgba(255,255,255,0.3)';
+    }, 3000);
 }
 
 function renderResultados(resultados, fechaHora) {
     document.getElementById('live-fecha').textContent = 'Datos reales de Google PageSpeed Insights (Mobile) — ' + fechaHora;
 
+    var exitosos = resultados.filter(function(r) { return !r.error; });
+    var fallidos = resultados.filter(function(r) { return r.error; });
+
     // Score boxes
     var scoresHtml = '';
     resultados.forEach(function(r) {
         if (r.error) {
-            scoresHtml += '<div class="score-box"><div class="score-box-value red">ERR</div><div class="score-box-label">' + r.nombre + '<br>No disponible</div></div>';
+            scoresHtml += '<div class="score-box"><div class="score-box-value yellow">N/A</div><div class="score-box-label">' + r.nombre + '<br><span style="font-size:11px;">' + (r.errorMsg || 'Timeout') + '</span></div></div>';
         } else {
             scoresHtml += '<div class="score-box"><div class="score-box-value ' + scoreColor(r.performance) + '">' + r.performance + '</div><div class="score-box-label">' + r.nombre + '<br>Performance Mobile</div></div>';
         }
     });
     document.getElementById('live-scores').innerHTML = scoresHtml;
 
-    // Tabla detallada
-    var tabla = '<div class="comparison-table-wrapper"><table class="comparison-table"><thead><tr>'
-        + '<th>Metrica</th>';
+    // Tabla detallada solo con sitios exitosos
+    if (exitosos.length === 0) {
+        document.getElementById('live-detalles').innerHTML = '<div class="friction-card"><h4>No se pudieron obtener datos</h4><p style="color:#6b7280;">La API de Google PageSpeed puede estar temporalmente saturada. Intenta de nuevo en unos minutos.</p></div>';
+        return;
+    }
+
+    var tabla = '<div class="comparison-table-wrapper"><table class="comparison-table"><thead><tr><th>Metrica</th>';
     resultados.forEach(function(r) {
         var thClass = r.clase === 'answer' ? ' class="col-answer"' : '';
         tabla += '<th' + thClass + '>' + r.nombre + '</th>';
@@ -1351,13 +1388,13 @@ function renderResultados(resultados, fechaHora) {
         resultados.forEach(function(r) {
             var tdClass = r.clase === 'answer' ? ' class="col-answer"' : '';
             if (r.error) {
-                tabla += '<td' + tdClass + '>-</td>';
+                tabla += '<td' + tdClass + '><span style="color:#9ca3af;">-</span></td>';
             } else {
                 var val = r[m.key];
                 if (typeof val === 'number') {
                     tabla += '<td' + tdClass + '><span class="tag ' + scoreTag(val) + '">' + val + '/100</span></td>';
                 } else {
-                    tabla += '<td' + tdClass + '>' + val + '</td>';
+                    tabla += '<td' + tdClass + '>' + (val || '-') + '</td>';
                 }
             }
         });
@@ -1369,7 +1406,6 @@ function renderResultados(resultados, fechaHora) {
 }
 
 function actualizarTarjetas(resultados) {
-    // Buscar las tarjetas de competidores y actualizar el Score Mobile con datos reales
     var tarjetas = document.querySelectorAll('.competitor-card');
     tarjetas.forEach(function(tarjeta) {
         var nombre = tarjeta.querySelector('.card-name');
@@ -1379,7 +1415,6 @@ function actualizarTarjetas(resultados) {
                 || r.nombre.toLowerCase().indexOf(nombre.textContent.trim().toLowerCase().split(' ')[0]) > -1;
         });
         if (resultado && !resultado.error) {
-            // Actualizar la barra de UX General con el performance score real
             var scoreBar = tarjeta.querySelector('.score-fill');
             var scoreNum = tarjeta.querySelector('.score-number');
             if (scoreBar && scoreNum) {
@@ -1415,7 +1450,6 @@ window.addEventListener('DOMContentLoaded', function() {
 <style>
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>
-</script>
 
 </body>
 </html>
