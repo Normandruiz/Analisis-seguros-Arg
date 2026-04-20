@@ -812,10 +812,24 @@
 
     <hr class="divider">
 
-    <!-- Section 2: Comparison Table -->
+    <!-- Section 2: Datos en Vivo -->
+    <div id="live-panel" style="display:none;">
+        <div class="section">
+            <div style="display:flex; align-items:center; margin-bottom:8px;">
+                <span class="section-number" style="background:#10b981;">2</span>
+                <h2 class="section-title">Datos en Vivo — Performance Real</h2>
+            </div>
+            <p class="section-subtitle" id="live-fecha">Hace clic en "Actualizar" para obtener datos reales de Google PageSpeed Insights</p>
+            <div class="score-summary" id="live-scores"></div>
+            <div id="live-detalles" style="display:flex; flex-direction:column; gap:12px;"></div>
+        </div>
+        <hr class="divider">
+    </div>
+
+    <!-- Section 3: Comparison Table -->
     <div class="section">
         <div style="display: flex; align-items: center; margin-bottom: 8px;">
-            <span class="section-number">2</span>
+            <span class="section-number">3</span>
             <h2 class="section-title">Tabla Comparativa Detallada</h2>
         </div>
         <p class="section-subtitle">Comparacion lado a lado de todos los criterios del flujo de cotizacion</p>
@@ -930,10 +944,10 @@
 
     <hr class="divider">
 
-    <!-- Section 3: Friction Analysis -->
+    <!-- Section 4: Friction Analysis -->
     <div class="section">
         <div style="display: flex; align-items: center; margin-bottom: 8px;">
-            <span class="section-number">3</span>
+            <span class="section-number">4</span>
             <h2 class="section-title">Analisis de Friccion</h2>
         </div>
         <p class="section-subtitle">Donde pierde usuarios Answer Seguros en el funnel de cotizacion</p>
@@ -1023,10 +1037,10 @@
 
     <hr class="divider">
 
-    <!-- Section 4: Action Items -->
+    <!-- Section 5: Action Items -->
     <div class="section">
         <div style="display: flex; align-items: center; margin-bottom: 8px;">
-            <span class="section-number">4</span>
+            <span class="section-number">5</span>
             <h2 class="section-title">5 Accionables Prioritarios para Answer</h2>
         </div>
         <p class="section-subtitle">Clasificados por impacto en conversion y facilidad de implementacion</p>
@@ -1101,10 +1115,10 @@
 
     <hr class="divider">
 
-    <!-- Section 5: Impact -->
+    <!-- Section 6: Impact -->
     <div class="section">
         <div style="display: flex; align-items: center; margin-bottom: 8px;">
-            <span class="section-number">5</span>
+            <span class="section-number">6</span>
             <h2 class="section-title">Impacto Estimado</h2>
         </div>
         <p class="section-subtitle">Proyeccion de mejora al implementar los 5 accionables</p>
@@ -1129,86 +1143,6 @@
         </div>
     </div>
 
-    <hr class="divider">
-
-    <!-- Section 6: Roadmap -->
-    <div class="section">
-        <div style="display: flex; align-items: center; margin-bottom: 8px;">
-            <span class="section-number">6</span>
-            <h2 class="section-title">Roadmap de Implementacion</h2>
-        </div>
-        <p class="section-subtitle">Secuencia sugerida priorizando quick wins</p>
-
-        <div class="roadmap">
-            <div class="roadmap-item active">
-                <div class="roadmap-week">Semana 1-2 | QUICK WIN</div>
-                <div class="roadmap-title">WhatsApp flotante + chatbot basico</div>
-                <div class="roadmap-desc">Integrar WhatsApp Business API. Widget flotante visible en todo el flujo. Respuestas automatizadas para las 10 preguntas mas frecuentes sobre coberturas.</div>
-            </div>
-            <div class="roadmap-item active">
-                <div class="roadmap-week">Semana 2-3 | QUICK WIN</div>
-                <div class="roadmap-title">Rediseno de CTAs + optimizacion de scripts</div>
-                <div class="roadmap-desc">Cambiar color CTA a rojo/naranja. Texto "Ver mi precio en 2 min". Diferir GTM/FB Pixel. Agregar barra de progreso mobile. Medicion A/B.</div>
-            </div>
-            <div class="roadmap-item">
-                <div class="roadmap-week">Semana 3-5 | ALTO IMPACTO</div>
-                <div class="roadmap-title">Reestructurar flujo: precio antes de datos personales</div>
-                <div class="roadmap-desc">Nuevo flujo: Auto + CP > Ver planes y precios > Datos personales solo al contratar. Requiere refactor del stepper Angular. Test A/B vs flujo actual.</div>
-            </div>
-            <div class="roadmap-item">
-                <div class="roadmap-week">Semana 4-6 | ALTO IMPACTO</div>
-                <div class="roadmap-title">Integracion API patente para precarga de datos</div>
-                <div class="roadmap-desc">Conectar con API DNRPA o servicio de datos vehiculares. Input unico de patente que autocompleta marca/modelo/anio/version. Fallback a seleccion manual.</div>
-            </div>
-            <div class="roadmap-item">
-                <div class="roadmap-week">Semana 5-7 | MEJORA UX</div>
-                <div class="roadmap-title">Rediseno tarjetas de cobertura + comparador visual</div>
-                <div class="roadmap-desc">Nuevos nombres: "Todo Riesgo + Clima", "Terceros Premium". Tabla comparativa con checkmarks. Tooltips en cada item. Destacar plan recomendado.</div>
-            </div>
-        </div>
-    </div>
-
-    <hr class="divider">
-
-    <!-- Benchmark Reference -->
-    <div class="section" style="padding-bottom: 40px;">
-        <div style="display: flex; align-items: center; margin-bottom: 8px;">
-            <span class="section-number">7</span>
-            <h2 class="section-title">Referencia: ClickSeguros como Modelo UX</h2>
-        </div>
-        <p class="section-subtitle">Elementos del comparador de ClickSeguros que Answer deberia adoptar</p>
-
-        <div class="friction-grid">
-            <div class="friction-card">
-                <h4><span style="font-size: 18px;">&#127912;</span> Diseno visual</h4>
-                <div class="friction-item"><span>&#10003;</span><span>Hero limpio con cotizador prominente</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Select2 con filtrado interactivo en dropdowns</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Bordes redondeados consistentes (100px en botones)</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Color primario azul (#0264EB) transmite confianza</span></div>
-            </div>
-            <div class="friction-card">
-                <h4><span style="font-size: 18px;">&#9889;</span> UX del cotizador</h4>
-                <div class="friction-item"><span>&#10003;</span><span>Campos que se habilitan progresivamente</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Loading states con backdrop blur</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Livewire para actualizacion sin recarga</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Validacion en tiempo real</span></div>
-            </div>
-            <div class="friction-card">
-                <h4><span style="font-size: 18px;">&#129309;</span> Confianza</h4>
-                <div class="friction-item"><span>&#10003;</span><span>25 logos de aseguradoras visibles</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Testimonios Google Reviews (4.7 estrellas)</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Inscripcion SSN visible en footer</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>WhatsApp flotante siempre accesible</span></div>
-            </div>
-            <div class="friction-card">
-                <h4><span style="font-size: 18px;">&#128241;</span> Mobile</h4>
-                <div class="friction-item"><span>&#10003;</span><span>Inputs full-width en mobile</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Navegacion adaptativa (hamburger)</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Toast notifications no intrusivas</span></div>
-                <div class="friction-item"><span>&#10003;</span><span>Schema.org para SEO</span></div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <!-- Footer -->
@@ -1250,19 +1184,6 @@
     </div>
 </div>
 
-<!-- Panel de resultados en vivo -->
-<div id="live-panel" style="display:none; max-width:1200px; margin:0 auto; padding:0 24px;">
-    <hr class="divider">
-    <div class="section">
-        <div style="display:flex; align-items:center; margin-bottom:8px;">
-            <span class="section-number" style="background:#10b981;">&#9889;</span>
-            <h2 class="section-title">Datos en Vivo — Ultima Actualizacion</h2>
-        </div>
-        <p class="section-subtitle" id="live-fecha">Cargando...</p>
-        <div class="score-summary" id="live-scores"></div>
-        <div id="live-detalles" style="display:flex; flex-direction:column; gap:12px;"></div>
-    </div>
-</div>
 
 <script>
 var SITIOS = [
