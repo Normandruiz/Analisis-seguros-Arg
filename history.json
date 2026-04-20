@@ -1,0 +1,104 @@
+{
+  "mes": "Abril 2026",
+  "cambios": [
+    {
+      "fecha": "2026-04-17",
+      "competidor": "Answer Seguros",
+      "tipo": "negativo",
+      "campo": "camposFormulario",
+      "valorAnterior": "10",
+      "valorNuevo": "11",
+      "descripcion": "Aumento de 10 a 11 campos en el formulario de cotizacion"
+    },
+    {
+      "fecha": "2026-04-17",
+      "competidor": "San Cristobal",
+      "tipo": "negativo",
+      "campo": "tiempoCarga",
+      "valorAnterior": "3200",
+      "valorNuevo": "4150",
+      "descripcion": "Tiempo de carga aumento de 3.2s a 4.1s (degradacion de performance)"
+    },
+    {
+      "fecha": "2026-04-16",
+      "competidor": "La Caja",
+      "tipo": "positivo",
+      "campo": "tieneWhatsApp",
+      "valorAnterior": "false",
+      "valorNuevo": "true",
+      "descripcion": "Agrego WhatsApp flotante en su cotizador"
+    },
+    {
+      "fecha": "2026-04-14",
+      "competidor": "iunigo",
+      "tipo": "positivo",
+      "campo": "tiempoCarga",
+      "valorAnterior": "2400",
+      "valorNuevo": "1890",
+      "descripcion": "Mejoro tiempo de carga de 2.4s a 1.9s"
+    },
+    {
+      "fecha": "2026-04-12",
+      "competidor": "Answer Seguros",
+      "tipo": "neutro",
+      "campo": "titleTag",
+      "valorAnterior": "Answer - Seguros Online",
+      "valorNuevo": "Answer Seguros - Seguros de Auto Online",
+      "descripcion": "Cambio el title tag de la pagina principal"
+    },
+    {
+      "fecha": "2026-04-10",
+      "competidor": "La Caja",
+      "tipo": "positivo",
+      "campo": "tieneChatbot",
+      "valorAnterior": "false",
+      "valorNuevo": "true",
+      "descripcion": "Implemento chatbot 'Letizia' en el sitio"
+    },
+    {
+      "fecha": "2026-04-10",
+      "competidor": "La Caja",
+      "tipo": "negativo",
+      "campo": "tieneRecaptcha",
+      "valorAnterior": "false",
+      "valorNuevo": "true",
+      "descripcion": "Agrego reCAPTCHA al formulario de cotizacion (nueva friccion)"
+    },
+    {
+      "fecha": "2026-04-08",
+      "competidor": "San Cristobal",
+      "tipo": "positivo",
+      "campo": "tieneWhatsApp",
+      "valorAnterior": "false",
+      "valorNuevo": "true",
+      "descripcion": "Agrego WhatsApp con asistente 'Santi'"
+    },
+    {
+      "fecha": "2026-04-05",
+      "competidor": "iunigo",
+      "tipo": "positivo",
+      "campo": "camposFormulario",
+      "valorAnterior": "6",
+      "valorNuevo": "5",
+      "descripcion": "Redujo campos del formulario de 6 a 5 (elimino campo redundante)"
+    },
+    {
+      "fecha": "2026-04-03",
+      "competidor": "Answer Seguros",
+      "tipo": "negativo",
+      "campo": "tiempoCarga",
+      "valorAnterior": "2800",
+      "valorNuevo": "3420",
+      "descripcion": "Tiempo de carga aumento de 2.8s a 3.4s tras agregar scripts de tracking"
+    },
+    {
+      "fecha": "2026-04-01",
+      "competidor": "San Cristobal",
+      "tipo": "negativo",
+      "campo": "online",
+      "valorAnterior": "true",
+      "valorNuevo": "false",
+      "descripcion": "Sitio estuvo caido por 4 horas (mantenimiento programado)"
+    }
+  ]
+}

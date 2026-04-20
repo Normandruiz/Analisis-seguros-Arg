@@ -567,6 +567,74 @@
         .reference-banner strong {
             color: #78350f;
         }
+        /* Filtros bitacora */
+        .filter-btn {
+            background: white; border: 1px solid var(--gray-200); padding: 6px 14px;
+            border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 12px;
+            font-weight: 500; cursor: pointer; color: var(--gray-500); transition: all 0.2s;
+        }
+        .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Timeline bitacora */
+        .timeline { position: relative; padding-left: 32px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px;
+            width: 2px; background: var(--gray-200);
+        }
+        .timeline-group { margin-bottom: 24px; }
+        .timeline-date {
+            font-size: 13px; font-weight: 700; color: var(--primary);
+            margin-bottom: 8px; position: relative;
+        }
+        .timeline-date::before {
+            content: ''; position: absolute; left: -25px; top: 4px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--primary); border: 3px solid #dbeafe;
+        }
+        .timeline-entry {
+            background: white; border-radius: 12px; padding: 14px 18px;
+            box-shadow: var(--shadow); margin-bottom: 8px; margin-left: 4px;
+            display: flex; align-items: center; gap: 12px;
+            border-left: 3px solid var(--gray-200); transition: all 0.2s;
+        }
+        .timeline-entry:hover { transform: translateX(4px); }
+        .timeline-entry.positivo { border-left-color: var(--success); }
+        .timeline-entry.negativo { border-left-color: var(--danger); }
+        .timeline-entry.neutro { border-left-color: var(--warning); }
+        .timeline-entry .entry-icon { font-size: 18px; flex-shrink: 0; }
+        .timeline-entry .entry-comp {
+            font-size: 11px; font-weight: 700; color: var(--primary);
+            background: #eff6ff; padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
+        }
+        .timeline-entry .entry-text { font-size: 13px; color: var(--gray-700); }
+        .timeline-entry .entry-values {
+            font-size: 11px; color: var(--gray-500); margin-left: auto;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .timeline-entry .entry-values .old { text-decoration: line-through; color: var(--danger); }
+        .timeline-entry .entry-values .new { font-weight: 600; color: var(--success); }
+
+        .stat-mini { text-align: center; }
+        .stat-mini-value { font-size: 28px; font-weight: 800; }
+        .stat-mini-label { font-size: 12px; color: var(--gray-500); }
+
+        .change-item {
+            background: white; border-radius: 12px; padding: 16px 20px;
+            box-shadow: var(--shadow); margin-bottom: 12px;
+            border-left: 4px solid var(--warning);
+            display: flex; align-items: center; gap: 16px;
+        }
+        .change-item.new-feature { border-left-color: var(--success); }
+        .change-item.removed { border-left-color: var(--danger); }
+        .change-icon { font-size: 20px; }
+        .change-text { font-size: 14px; color: var(--gray-700); }
+        .change-text strong { color: var(--gray-900); }
+
+        @media (max-width: 768px) {
+            .timeline-entry { flex-wrap: wrap; }
+            .timeline-entry .entry-values { margin-left: 0; width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -574,43 +642,44 @@
 <!-- Header -->
 <div class="header">
     <div class="header-content" style="position: relative;">
-        <button id="btn-actualizar" onclick="actualizarInforme()" style="
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 10px 20px;
-            border-radius: 100px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        " onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
-            <span id="refresh-icon" style="font-size: 16px;">&#8635;</span> Actualizar
-        </button>
-        <button onclick="abrirModal()" style="
-            position: absolute;
-            top: 0;
-            right: 170px;
-            background: rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.7);
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 10px 14px;
-            border-radius: 100px;
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        " onmouseover="this.style.background='rgba(255,255,255,0.2)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.7)'" title="Configurar API Key">
-            &#9881; API Key
-        </button>
+        <!-- Logos -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <img src="https://answerseguros.com.ar/assets/img/logo_answer_galicia.svg" alt="Answer Seguros" style="height: 40px; filter: brightness(0) invert(1); opacity: 0.9;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button onclick="abrirModal()" style="
+                    background: rgba(255,255,255,0.08);
+                    color: rgba(255,255,255,0.7);
+                    border: 1px solid rgba(255,255,255,0.15);
+                    padding: 10px 14px;
+                    border-radius: 100px;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 13px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                " onmouseover="this.style.background='rgba(255,255,255,0.2)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.7)'" title="Configurar API Key">
+                    &#9881; API Key
+                </button>
+                <button id="btn-actualizar" onclick="actualizarInforme()" style="
+                    background: rgba(255,255,255,0.15);
+                    backdrop-filter: blur(10px);
+                    color: white;
+                    border: 1px solid rgba(255,255,255,0.3);
+                    padding: 10px 20px;
+                    border-radius: 100px;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 14px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: all 0.3s ease;
+                " onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+                    <span id="refresh-icon" style="font-size: 16px;">&#8635;</span> Actualizar
+                </button>
+                <img src="logo-beyond.png" alt="Beyond" style="height: 32px; background: rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 8px;">
+            </div>
+        </div>
         <div class="header-badge">BENCHMARK CRO 2026</div>
         <h1>Answer Seguros vs. Competidores</h1>
         <p>Analisis comparativo del flujo de cotizacion de seguros de auto en Argentina. Oportunidades para aumentar cotizaciones y contrataciones diarias.</p>
@@ -812,16 +881,31 @@
 
     <hr class="divider">
 
-    <!-- Section 2: Datos en Vivo -->
-    <div id="live-panel" style="display:none;">
+    <!-- Section 2: Datos en Vivo + Scraping -->
+    <div id="live-panel">
         <div class="section">
             <div style="display:flex; align-items:center; margin-bottom:8px;">
                 <span class="section-number" style="background:#10b981;">2</span>
-                <h2 class="section-title">Datos en Vivo — Performance Real</h2>
+                <h2 class="section-title">Monitoreo en Vivo</h2>
             </div>
-            <p class="section-subtitle" id="live-fecha">Hace clic en "Actualizar" para obtener datos reales de Google PageSpeed Insights</p>
+            <p class="section-subtitle" id="live-fecha">Datos actualizados automaticamente via scraping diario + Google PageSpeed Insights</p>
+
+            <!-- Scraping cards -->
+            <div class="competitor-grid" id="scraping-cards"></div>
+
+            <!-- PageSpeed scores -->
             <div class="score-summary" id="live-scores"></div>
             <div id="live-detalles" style="display:flex; flex-direction:column; gap:12px;"></div>
+
+            <!-- Cambios del dia -->
+            <div style="margin-top: 32px;">
+                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px; display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:20px;">&#128276;</span> Cambios Detectados vs. Dia Anterior
+                </h3>
+                <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 16px;">El sistema compara automaticamente con el scraping anterior y alerta cambios</p>
+                <div id="changes-today"></div>
+            </div>
+
         </div>
         <hr class="divider">
     </div>
@@ -1143,6 +1227,32 @@
         </div>
     </div>
 
+    <hr class="divider">
+
+    <!-- Section 7: Bitacora Mensual -->
+    <div class="section">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <span class="section-number">7</span>
+            <h2 class="section-title">Bitacora Mensual — <span id="bitacora-mes"></span></h2>
+        </div>
+        <p class="section-subtitle">Historial completo de cambios detectados durante el mes en todos los competidores</p>
+
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+            <button class="filter-btn active" onclick="filtrarBitacora('todos')" data-filter="todos">Todos</button>
+            <button class="filter-btn" onclick="filtrarBitacora('positivo')" data-filter="positivo">&#128994; Mejoras</button>
+            <button class="filter-btn" onclick="filtrarBitacora('negativo')" data-filter="negativo">&#128308; Degradaciones</button>
+            <button class="filter-btn" onclick="filtrarBitacora('neutro')" data-filter="neutro">&#128309; Neutros</button>
+            <span style="border-left: 1px solid var(--gray-200); margin: 0 4px;"></span>
+            <button class="filter-btn" onclick="filtrarBitacora('Answer Seguros')" data-filter="Answer Seguros">Answer</button>
+            <button class="filter-btn" onclick="filtrarBitacora('La Caja')" data-filter="La Caja">La Caja</button>
+            <button class="filter-btn" onclick="filtrarBitacora('San Cristobal')" data-filter="San Cristobal">San Cristobal</button>
+            <button class="filter-btn" onclick="filtrarBitacora('iunigo')" data-filter="iunigo">iunigo</button>
+        </div>
+
+        <div class="score-summary" id="bitacora-stats"></div>
+        <div id="bitacora-timeline"></div>
+    </div>
+
 </div>
 
 <!-- Footer -->
@@ -1186,6 +1296,8 @@
 
 
 <script>
+var historialGlobal = [];
+
 var SITIOS = [
     { nombre: 'Answer Seguros', url: 'https://www.answerseguros.com.ar', clase: 'answer' },
     { nombre: 'La Caja', url: 'https://seguros.lacaja.com.ar', clase: 'lacaja' },
@@ -1451,6 +1563,157 @@ window.addEventListener('DOMContentLoaded', function() {
         if (datos) {
             var resultados = JSON.parse(datos);
             document.getElementById('live-panel').style.display = 'block';
+            renderResultados(resultados, fechaStr + ' ' + horaStr);
+            actualizarTarjetas(resultados);
+        }
+    }
+});
+// ====== SCRAPING DATA ======
+function renderScrapingCards(data) {
+    var html = '';
+    data.competidores.forEach(function(c) {
+        var speedClass = c.tiempoCarga < 2000 ? 'tag-high' : c.tiempoCarga < 3500 ? 'tag-medium' : 'tag-low';
+        var speedVal = (c.tiempoCarga / 1000).toFixed(1) + 's';
+        html += '<div class="competitor-card">'
+            + '<div class="card-header"><div style="width:10px;height:10px;border-radius:50%;background:' + (c.online ? '#10b981' : '#ef4444') + ';"></div>'
+            + '<div><div class="card-name">' + c.nombre + '</div>'
+            + '<div class="card-type">' + (c.online ? 'Online' : 'Offline') + ' — ' + speedVal + '</div></div></div>'
+            + '<div class="stat-row"><span class="stat-label">Tiempo carga</span><span class="stat-value"><span class="tag ' + speedClass + '">' + speedVal + '</span></span></div>'
+            + '<div class="stat-row"><span class="stat-label">Campos formulario</span><span class="stat-value"><strong>' + c.camposFormulario + '</strong></span></div>'
+            + '<div class="stat-row"><span class="stat-label">WhatsApp</span><span class="stat-value">' + (c.tieneWhatsApp ? '<span class="icon-check">&#10003;</span> Si' : '<span class="icon-cross">&#10007;</span> No') + '</span></div>'
+            + '<div class="stat-row"><span class="stat-label">Chatbot</span><span class="stat-value">' + (c.tieneChatbot ? '<span class="icon-check">&#10003;</span> Si' : '<span class="icon-cross">&#10007;</span> No') + '</span></div>'
+            + '<div class="stat-row"><span class="stat-label">Precarga patente</span><span class="stat-value">' + (c.tienePrecargaPatente ? '<span class="icon-check">&#10003;</span> Si' : '<span class="icon-cross">&#10007;</span> No') + '</span></div>'
+            + '<div class="stat-row"><span class="stat-label">100% Online</span><span class="stat-value">' + (c.cotizacion100Online ? '<span class="icon-check">&#10003;</span> Si' : '<span class="icon-cross">&#10007;</span> No') + '</span></div>'
+            + '</div>';
+    });
+    document.getElementById('scraping-cards').innerHTML = html;
+}
+
+// ====== HISTORIAL / BITACORA ======
+function tipoIcon(tipo) {
+    if (tipo === 'positivo') return '&#128994;';
+    if (tipo === 'negativo') return '&#128308;';
+    return '&#128309;';
+}
+
+function renderHistorial(historial) {
+    historialGlobal = historial.cambios;
+    document.getElementById('bitacora-mes').textContent = historial.mes;
+    var hoy = new Date().toISOString().split('T')[0];
+    var cambiosHoy = historial.cambios.filter(function(c) { return c.fecha === hoy; });
+    if (cambiosHoy.length === 0) {
+        var fechaMasReciente = historial.cambios[0] ? historial.cambios[0].fecha : null;
+        cambiosHoy = historial.cambios.filter(function(c) { return c.fecha === fechaMasReciente; });
+    }
+    renderCambiosHoy(cambiosHoy);
+    renderBitacoraStats(historial.cambios);
+    renderBitacoraTimeline(historial.cambios);
+}
+
+function renderCambiosHoy(cambios) {
+    var html = '';
+    if (cambios.length === 0) {
+        html = '<div class="change-item" style="border-left-color:#10b981;"><span class="change-icon">&#9989;</span><div class="change-text">Sin cambios detectados hoy.</div></div>';
+    } else {
+        cambios.forEach(function(c) {
+            var cls = c.tipo === 'positivo' ? 'new-feature' : c.tipo === 'negativo' ? 'removed' : '';
+            html += '<div class="change-item ' + cls + '"><span class="change-icon">' + tipoIcon(c.tipo) + '</span><div class="change-text"><strong>' + c.competidor + '</strong> ' + c.descripcion + '</div></div>';
+        });
+    }
+    document.getElementById('changes-today').innerHTML = html;
+}
+
+function renderBitacoraStats(cambios) {
+    var positivos = cambios.filter(function(c) { return c.tipo === 'positivo'; }).length;
+    var negativos = cambios.filter(function(c) { return c.tipo === 'negativo'; }).length;
+    var neutros = cambios.filter(function(c) { return c.tipo === 'neutro'; }).length;
+    var porComp = {};
+    cambios.forEach(function(c) { porComp[c.competidor] = (porComp[c.competidor] || 0) + 1; });
+    var masActivo = Object.keys(porComp).sort(function(a, b) { return porComp[b] - porComp[a]; })[0] || '-';
+    document.getElementById('bitacora-stats').innerHTML =
+        '<div class="score-box stat-mini"><div class="stat-mini-value" style="color:#10b981;">' + positivos + '</div><div class="stat-mini-label">Mejoras</div></div>'
+        + '<div class="score-box stat-mini"><div class="stat-mini-value" style="color:#ef4444;">' + negativos + '</div><div class="stat-mini-label">Degradaciones</div></div>'
+        + '<div class="score-box stat-mini"><div class="stat-mini-value" style="color:#f59e0b;">' + neutros + '</div><div class="stat-mini-label">Neutros</div></div>'
+        + '<div class="score-box stat-mini"><div class="stat-mini-value" style="color:#0264EB;font-size:16px;">' + masActivo + '</div><div class="stat-mini-label">Mas cambios este mes</div></div>';
+}
+
+function renderBitacoraTimeline(cambios, filtro) {
+    var grupos = {};
+    cambios.forEach(function(c) {
+        if (filtro && filtro !== 'todos') {
+            if (filtro === 'positivo' || filtro === 'negativo' || filtro === 'neutro') {
+                if (c.tipo !== filtro) return;
+            } else { if (c.competidor !== filtro) return; }
+        }
+        if (!grupos[c.fecha]) grupos[c.fecha] = [];
+        grupos[c.fecha].push(c);
+    });
+    var fechas = Object.keys(grupos).sort().reverse();
+    if (fechas.length === 0) {
+        document.getElementById('bitacora-timeline').innerHTML = '<p style="color:#9ca3af;text-align:center;padding:20px;">No hay cambios con este filtro</p>';
+        return;
+    }
+    var html = '<div class="timeline">';
+    fechas.forEach(function(fecha) {
+        var fechaDate = new Date(fecha + 'T12:00:00');
+        var fechaStr = fechaDate.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+        html += '<div class="timeline-group"><div class="timeline-date">' + fechaStr.charAt(0).toUpperCase() + fechaStr.slice(1) + '</div>';
+        grupos[fecha].forEach(function(c) {
+            var valoresHtml = '';
+            if (c.valorAnterior && c.valorNuevo) {
+                var vA = c.valorAnterior, vN = c.valorNuevo;
+                if (c.campo === 'tiempoCarga') { vA = (parseInt(vA)/1000).toFixed(1)+'s'; vN = (parseInt(vN)/1000).toFixed(1)+'s'; }
+                if (vA === 'true') vA = 'Si'; if (vA === 'false') vA = 'No';
+                if (vN === 'true') vN = 'Si'; if (vN === 'false') vN = 'No';
+                valoresHtml = '<div class="entry-values"><span class="old">' + vA + '</span> &rarr; <span class="new">' + vN + '</span></div>';
+            }
+            html += '<div class="timeline-entry ' + c.tipo + '"><span class="entry-icon">' + tipoIcon(c.tipo) + '</span><span class="entry-comp">' + c.competidor + '</span><span class="entry-text">' + c.descripcion + '</span>' + valoresHtml + '</div>';
+        });
+        html += '</div>';
+    });
+    html += '</div>';
+    document.getElementById('bitacora-timeline').innerHTML = html;
+}
+
+function filtrarBitacora(filtro) {
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-filter') === filtro) btn.classList.add('active');
+    });
+    renderBitacoraTimeline(historialGlobal, filtro);
+}
+
+// ====== CARGAR DATOS AL INICIAR ======
+window.addEventListener('DOMContentLoaded', function() {
+    // Cargar scraping data
+    fetch('data.json').then(function(r) { return r.json(); }).then(function(data) {
+        renderScrapingCards(data);
+        var fecha = new Date(data.ultimaActualizacion);
+        var fechaStr = fecha.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+        var horaStr = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('live-fecha').textContent = 'Ultimo scraping: ' + fechaStr + ' ' + horaStr + ' | PageSpeed Insights se actualiza con el boton "Actualizar"';
+    }).catch(function() {
+        document.getElementById('scraping-cards').innerHTML = '<p style="color:#9ca3af;">Datos de scraping no disponibles. Usa el boton Actualizar para PageSpeed.</p>';
+    });
+
+    // Cargar historial
+    fetch('history.json').then(function(r) { return r.json(); }).then(function(h) {
+        renderHistorial(h);
+    }).catch(function() {
+        document.getElementById('changes-today').innerHTML = '<div class="change-item" style="border-left-color:#10b981;"><span class="change-icon">&#9989;</span><div class="change-text">Historial no disponible aun.</div></div>';
+    });
+
+    // Restaurar PageSpeed guardado
+    var ultima = localStorage.getItem('benchmark_ultima_actualizacion');
+    var datos = localStorage.getItem('benchmark_datos_live');
+    if (ultima) {
+        var fecha = new Date(ultima);
+        var opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+        var fechaStr = fecha.toLocaleDateString('es-AR', opciones);
+        var horaStr = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        document.querySelector('.header-badge').textContent = 'BENCHMARK CRO 2026 — Actualizado: ' + fechaStr + ' ' + horaStr;
+        if (datos) {
+            var resultados = JSON.parse(datos);
             renderResultados(resultados, fechaStr + ' ' + horaStr);
             actualizarTarjetas(resultados);
         }
