@@ -1549,23 +1549,17 @@ function actualizarTarjetas(resultados) {
     });
 }
 
-// Al cargar, restaurar datos guardados
+// Al cargar, restaurar datos PageSpeed guardados (si existen)
 window.addEventListener('DOMContentLoaded', function() {
-    var ultima = localStorage.getItem('benchmark_ultima_actualizacion');
     var datos = localStorage.getItem('benchmark_datos_live');
-    if (ultima) {
-        var fecha = new Date(ultima);
-        var opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-        var fechaStr = fecha.toLocaleDateString('es-AR', opciones);
-        var horaStr = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-        document.querySelector('.header-badge').textContent = 'BENCHMARK CRO 2026 — Actualizado: ' + fechaStr + ' ' + horaStr;
-
-        if (datos) {
-            var resultados = JSON.parse(datos);
-            document.getElementById('live-panel').style.display = 'block';
-            renderResultados(resultados, fechaStr + ' ' + horaStr);
-            actualizarTarjetas(resultados);
-        }
+    if (datos) {
+        var resultados = JSON.parse(datos);
+        document.getElementById('live-panel').style.display = 'block';
+        var ahora = new Date();
+        var fechaStr = ahora.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+        var horaStr = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        renderResultados(resultados, fechaStr + ' ' + horaStr);
+        actualizarTarjetas(resultados);
     }
 });
 // ====== SCRAPING DATA ======
@@ -1703,20 +1697,20 @@ window.addEventListener('DOMContentLoaded', function() {
         document.getElementById('changes-today').innerHTML = '<div class="change-item" style="border-left-color:#10b981;"><span class="change-icon">&#9989;</span><div class="change-text">Historial no disponible aun.</div></div>';
     });
 
+    // Siempre mostrar fecha actual en el badge
+    var ahora = new Date();
+    var opcionesHoy = { day: 'numeric', month: 'long', year: 'numeric' };
+    var fechaHoy = ahora.toLocaleDateString('es-AR', opcionesHoy);
+    var horaHoy = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    document.querySelector('.header-badge').textContent = 'BENCHMARK CRO 2026 — ' + fechaHoy + ' ' + horaHoy;
+
     // Restaurar PageSpeed guardado
     var ultima = localStorage.getItem('benchmark_ultima_actualizacion');
     var datos = localStorage.getItem('benchmark_datos_live');
-    if (ultima) {
-        var fecha = new Date(ultima);
-        var opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-        var fechaStr = fecha.toLocaleDateString('es-AR', opciones);
-        var horaStr = fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-        document.querySelector('.header-badge').textContent = 'BENCHMARK CRO 2026 — Actualizado: ' + fechaStr + ' ' + horaStr;
-        if (datos) {
-            var resultados = JSON.parse(datos);
-            renderResultados(resultados, fechaStr + ' ' + horaStr);
-            actualizarTarjetas(resultados);
-        }
+    if (ultima && datos) {
+        var resultados = JSON.parse(datos);
+        renderResultados(resultados, fechaHoy + ' ' + horaHoy);
+        actualizarTarjetas(resultados);
     }
 });
 </script>
