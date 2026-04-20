@@ -595,6 +595,22 @@
         " onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
             <span id="refresh-icon" style="font-size: 16px;">&#8635;</span> Actualizar
         </button>
+        <button onclick="abrirModal()" style="
+            position: absolute;
+            top: 0;
+            right: 170px;
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 10px 14px;
+            border-radius: 100px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        " onmouseover="this.style.background='rgba(255,255,255,0.2)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.7)'" title="Configurar API Key">
+            &#9881; API Key
+        </button>
         <div class="header-badge">BENCHMARK CRO 2026</div>
         <h1>Answer Seguros vs. Competidores</h1>
         <p>Analisis comparativo del flujo de cotizacion de seguros de auto en Argentina. Oportunidades para aumentar cotizaciones y contrataciones diarias.</p>
@@ -1204,6 +1220,36 @@
     </div>
 </div>
 
+<!-- Modal API Key -->
+<div id="apikey-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; display:none; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:16px; padding:32px; max-width:520px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3); position:relative;">
+        <button onclick="cerrarModal()" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:24px; cursor:pointer; color:#6b7280;">&times;</button>
+        <h3 style="font-size:20px; font-weight:700; margin-bottom:8px; color:#111827;">&#128273; API Key de Google PageSpeed</h3>
+        <p style="font-size:14px; color:#6b7280; margin-bottom:20px; line-height:1.6;">
+            Para traer datos reales necesitas una clave gratuita de Google. Se obtiene en 2 minutos:
+        </p>
+        <ol style="font-size:13px; color:#4b5563; margin-bottom:20px; padding-left:20px; line-height:2;">
+            <li>Anda a <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#0264EB; font-weight:600;">Google Cloud Console</a></li>
+            <li>Crea un proyecto (o usa uno existente)</li>
+            <li>Hace clic en <strong>"+ Crear credenciales" > "Clave de API"</strong></li>
+            <li>Copia la clave y pegala abajo</li>
+            <li>Activa la API: <a href="https://console.cloud.google.com/apis/library/pagespeedonline.googleapis.com" target="_blank" style="color:#0264EB; font-weight:600;">Activar PageSpeed Insights API</a></li>
+        </ol>
+        <div style="display:flex; gap:8px;">
+            <input id="apikey-input" type="text" placeholder="Pega tu API Key aqui..." style="
+                flex:1; padding:12px 16px; border:2px solid #e5e7eb; border-radius:10px;
+                font-family:'Inter',sans-serif; font-size:14px; outline:none; transition:border 0.2s;
+            " onfocus="this.style.borderColor='#0264EB'" onblur="this.style.borderColor='#e5e7eb'">
+            <button onclick="guardarApiKey()" style="
+                background:#0264EB; color:white; border:none; padding:12px 24px;
+                border-radius:10px; font-family:'Inter',sans-serif; font-size:14px;
+                font-weight:600; cursor:pointer; white-space:nowrap;
+            ">Guardar</button>
+        </div>
+        <p style="font-size:11px; color:#9ca3af; margin-top:12px;">&#128274; La clave se guarda solo en tu navegador (localStorage). No se envia a ningun servidor.</p>
+    </div>
+</div>
+
 <!-- Panel de resultados en vivo -->
 <div id="live-panel" style="display:none; max-width:1200px; margin:0 auto; padding:0 24px;">
     <hr class="divider">
@@ -1226,12 +1272,38 @@ var SITIOS = [
     { nombre: 'iunigo', url: 'https://www.iunigo.com.ar', clase: 'iunigo' }
 ];
 
+function getApiKey() {
+    return localStorage.getItem('psi_api_key') || '';
+}
+
 function fetchPageSpeed(siteUrl) {
+    var key = getApiKey();
     var apiUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url='
         + encodeURIComponent(siteUrl)
         + '&strategy=mobile&category=performance&category=accessibility&category=best-practices&category=seo';
+    if (key) apiUrl += '&key=' + key;
     return fetch(apiUrl, { signal: AbortSignal.timeout(120000) })
         .then(function(r) { return r.json(); });
+}
+
+function abrirModal() {
+    var modal = document.getElementById('apikey-modal');
+    modal.style.display = 'flex';
+    var saved = getApiKey();
+    if (saved) document.getElementById('apikey-input').value = saved;
+}
+
+function cerrarModal() {
+    document.getElementById('apikey-modal').style.display = 'none';
+}
+
+function guardarApiKey() {
+    var key = document.getElementById('apikey-input').value.trim();
+    if (key) {
+        localStorage.setItem('psi_api_key', key);
+        cerrarModal();
+        actualizarInforme();
+    }
 }
 
 function parsePSIResult(sitio, data) {
@@ -1282,6 +1354,12 @@ function actualizarProgreso(indice, total, nombreSitio) {
 }
 
 async function actualizarInforme() {
+    // Si no hay API key, mostrar modal
+    if (!getApiKey()) {
+        abrirModal();
+        return;
+    }
+
     var btn = document.getElementById('btn-actualizar');
     btn.innerHTML = '<span style="font-size:16px; animation: spin 1s linear infinite; display:inline-block;">&#8635;</span> Analizando...';
     btn.style.pointerEvents = 'none';
@@ -1301,6 +1379,15 @@ async function actualizarInforme() {
 
         try {
             var data = await fetchPageSpeed(sitio.url);
+            if (data.error && data.error.code === 429) {
+                // Quota exceeded - pedir nueva key
+                localStorage.removeItem('psi_api_key');
+                btn.innerHTML = '<span id="refresh-icon" style="font-size:16px;">&#8635;</span> Actualizar';
+                btn.style.pointerEvents = 'auto';
+                btn.style.opacity = '1';
+                document.getElementById('live-scores').innerHTML = '<div class="score-box" style="grid-column:1/-1;"><div class="score-box-value red">Quota agotada</div><div class="score-box-label">Tu API Key alcanzo el limite diario. Genera una nueva o espera 24hs.<br><button onclick="abrirModal()" style="margin-top:10px;background:#0264EB;color:white;border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-weight:600;">Cambiar API Key</button></div></div>';
+                return;
+            }
             resultados.push(parsePSIResult(sitio, data));
         } catch (e) {
             resultados.push({ nombre: sitio.nombre, clase: sitio.clase, url: sitio.url, error: true, errorMsg: e.message });
