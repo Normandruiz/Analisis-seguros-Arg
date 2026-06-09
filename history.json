@@ -1,8 +1,8 @@
 {
-  "mes": "Abril 2026",
+  "mes": "Junio 2026",
   "cambios": [
     {
-      "fecha": "2026-04-17",
+      "fecha": "2026-06-08",
       "competidor": "Answer Seguros",
       "tipo": "negativo",
       "campo": "camposFormulario",
@@ -11,7 +11,7 @@
       "descripcion": "Aumento de 10 a 11 campos en el formulario de cotizacion"
     },
     {
-      "fecha": "2026-04-17",
+      "fecha": "2026-06-08",
       "competidor": "San Cristobal",
       "tipo": "negativo",
       "campo": "tiempoCarga",
@@ -20,7 +20,7 @@
       "descripcion": "Tiempo de carga aumento de 3.2s a 4.1s (degradacion de performance)"
     },
     {
-      "fecha": "2026-04-16",
+      "fecha": "2026-06-06",
       "competidor": "La Caja",
       "tipo": "positivo",
       "campo": "tieneWhatsApp",
@@ -29,7 +29,7 @@
       "descripcion": "Agrego WhatsApp flotante en su cotizador"
     },
     {
-      "fecha": "2026-04-14",
+      "fecha": "2026-06-04",
       "competidor": "iunigo",
       "tipo": "positivo",
       "campo": "tiempoCarga",
@@ -38,7 +38,7 @@
       "descripcion": "Mejoro tiempo de carga de 2.4s a 1.9s"
     },
     {
-      "fecha": "2026-04-12",
+      "fecha": "2026-06-03",
       "competidor": "Answer Seguros",
       "tipo": "neutro",
       "campo": "titleTag",
@@ -47,7 +47,7 @@
       "descripcion": "Cambio el title tag de la pagina principal"
     },
     {
-      "fecha": "2026-04-10",
+      "fecha": "2026-06-02",
       "competidor": "La Caja",
       "tipo": "positivo",
       "campo": "tieneChatbot",
@@ -56,7 +56,7 @@
       "descripcion": "Implemento chatbot 'Letizia' en el sitio"
     },
     {
-      "fecha": "2026-04-10",
+      "fecha": "2026-06-02",
       "competidor": "La Caja",
       "tipo": "negativo",
       "campo": "tieneRecaptcha",
@@ -65,7 +65,7 @@
       "descripcion": "Agrego reCAPTCHA al formulario de cotizacion (nueva friccion)"
     },
     {
-      "fecha": "2026-04-08",
+      "fecha": "2026-05-30",
       "competidor": "San Cristobal",
       "tipo": "positivo",
       "campo": "tieneWhatsApp",
@@ -74,7 +74,7 @@
       "descripcion": "Agrego WhatsApp con asistente 'Santi'"
     },
     {
-      "fecha": "2026-04-05",
+      "fecha": "2026-05-28",
       "competidor": "iunigo",
       "tipo": "positivo",
       "campo": "camposFormulario",
@@ -83,7 +83,7 @@
       "descripcion": "Redujo campos del formulario de 6 a 5 (elimino campo redundante)"
     },
     {
-      "fecha": "2026-04-03",
+      "fecha": "2026-05-26",
       "competidor": "Answer Seguros",
       "tipo": "negativo",
       "campo": "tiempoCarga",
@@ -92,7 +92,7 @@
       "descripcion": "Tiempo de carga aumento de 2.8s a 3.4s tras agregar scripts de tracking"
     },
     {
-      "fecha": "2026-04-01",
+      "fecha": "2026-05-24",
       "competidor": "San Cristobal",
       "tipo": "negativo",
       "campo": "online",
